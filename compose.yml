@@ -1,0 +1,8 @@
+services:
+  remix-spa:
+    build:
+      context: test-application
+      target: production
+    ports:
+      - "3001:3000"
+    container_name: remix-spa
