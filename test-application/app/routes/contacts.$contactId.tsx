@@ -1,17 +1,23 @@
-import { Form, Link } from "@remix-run/react";
+import { ClientLoaderFunctionArgs, Form, Link, useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 
-import type { ContactRecord } from "../data";
+import { getContact, type ContactRecord } from "../data";
+
+type Params = {
+  contactId: string;
+}
+
+export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
+  if (!params.contactId) {
+    throw new Error("Missing contactId");
+  }
+  const contact = await getContact(params.contactId);
+  return { contact };
+};
 
 export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placecats.com/200/200",
-    twitter: "hokahokabob089",
-    notes: "Some notes",
-    favorite: true,
-  };
+  const { contact } = useLoaderData<typeof clientLoader>();
+  if(!contact) return null;
 
   return (
     <div id="contact">
