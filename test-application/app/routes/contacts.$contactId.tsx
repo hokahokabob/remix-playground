@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 
 import type { ContactRecord } from "../data";
@@ -37,11 +37,11 @@ export default function Contact() {
 
         {contact.twitter ? (
           <p>
-            <a
-              href={`https://twitter.com/${contact.twitter}`}
+            <Link 
+              to={`https://twitter.com/${contact.twitter}`}
             >
               {contact.twitter}
-            </a>
+            </Link>
           </p>
         ) : null}
 
