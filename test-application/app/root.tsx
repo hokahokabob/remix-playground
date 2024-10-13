@@ -21,8 +21,10 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: appStylesHref },
 ]
 
-export const clientLoader = async (request: ClientLoaderFunctionArgs) => {
-  const contacts = await getContacts()
+export const clientLoader = async ({ request }: ClientLoaderFunctionArgs) => {
+  const url = new URL(request.url)
+  const query = url.searchParams.get('q')
+  const contacts = await getContacts(query)
 
   return { contacts }
 }
