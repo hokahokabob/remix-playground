@@ -60,6 +60,7 @@ export default function Contact() {
             <button type="submit">Edit</button>
           </Form>
 
+          {/* The <Form action="destroy"> matches the new route at "contacts.$contactId.destroy" and sends it the request */}
           <Form
             action="destroy"
             method="post"
