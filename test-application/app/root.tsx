@@ -14,6 +14,7 @@ import {
 } from '@remix-run/react'
 
 import { LinksFunction } from '@remix-run/node'
+import { useEffect, useState } from 'react'
 import appStylesHref from './app.css?url'
 import { createEmptyContact, getContacts } from './data'
 
@@ -26,7 +27,7 @@ export const clientLoader = async ({ request }: ClientLoaderFunctionArgs) => {
   const query = url.searchParams.get('q')
   const contacts = await getContacts(query)
 
-  return { contacts }
+  return { contacts, query }
 }
 
 export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
@@ -36,8 +37,14 @@ export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
 }
 
 export const App = () => {
-  const { contacts } = useLoaderData<typeof clientLoader>()
+  const { contacts, query } = useLoaderData<typeof clientLoader>()
   const navigation = useNavigation()
+  const [queryState, setQueryState] = useState<string>(query || '')
+
+  useEffect(() => {
+    setQueryState(query || '')
+  }, [query])
+
   return (
     <>
       <div id="sidebar">
@@ -50,6 +57,8 @@ export const App = () => {
               placeholder="Search"
               type="search"
               name="q"
+              onChange={(event) => setQueryState(event.currentTarget.value)}
+              value={queryState}
             />
             <div id="search-spinner" aria-hidden hidden={true} />
           </Form>
