@@ -1,5 +1,4 @@
 import type { MetaFunction } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,7 +8,13 @@ export const meta: MetaFunction = () => {
 }
 
 export const Index = () => {
-  return <Outlet />
+  return (
+    <p id="index-page">
+      This is a demo for Remix.
+      <br />
+      Check out <a href="https://remix.run">the docs at remix.run</a>.
+    </p>
+  )
 }
 
 export default Index
