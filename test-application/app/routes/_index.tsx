@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
-import { ClientLoaderFunctionArgs, Form, Link, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
-import { getContacts } from "~/data";
+import { ClientActionFunctionArgs, ClientLoaderFunctionArgs, Form, Link, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { createEmptyContact, getContacts } from "~/data";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,6 +13,14 @@ export const clientLoader = async (request: ClientLoaderFunctionArgs) => {
   const contacts = await getContacts();
   
   return { contacts };
+}
+
+
+export const clientAction = async ({
+  request,
+}: ClientActionFunctionArgs) => {
+  const contact  = await createEmptyContact();
+  return { contact };
 }
 
 export const Index = () => {
