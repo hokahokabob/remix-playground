@@ -9,7 +9,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
   const contact = await getContact(params.contactId);
   if(!contact) {
     console.error(`Contact not found for id: ${params.contactId}`);
-    return new Response("Not found", { status: 404 });
+    throw new Response("Not found", { status: 404 });
   }
   return { contact };
 };
