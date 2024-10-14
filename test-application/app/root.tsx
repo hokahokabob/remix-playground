@@ -59,7 +59,8 @@ export const App = () => {
             id="search-form"
             role="search"
             onChange={(event) => {
-              submit(event.currentTarget)
+              const isFirstSearch = queryState === null
+              submit(event.currentTarget, {replace: !isFirstSearch})
             }}
           >
             <input
