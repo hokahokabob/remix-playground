@@ -25,12 +25,13 @@ export const clientAction = async ({
   params,
   request,
 }: ClientActionFunctionArgs) => {
-  invariant(params.contactId, "Missing contactId param");
-  const formData = await request.formData();
+  invariant(params.contactId, 'Missing contactId param')
+  const formData = await request.formData()
+
   return updateContact(params.contactId, {
-    favorite: formData.get("favorite") === "true",
-  });
-};
+    favorite: formData.get('favorite') === 'true',
+  })
+}
 
 export default function Contact() {
   const { contact } = useLoaderData<typeof clientLoader>()
@@ -97,11 +98,16 @@ export default function Contact() {
 const Favorite: FunctionComponent<{
   contact: Pick<ContactRecord, 'favorite'>
 }> = ({ contact }) => {
-  const favorite = contact.favorite
   const fetcher = useFetcher()
+  // Optimistic UI: we assume the mutation will succeed and update the UI immediately
+  // If the mutation fails, the UI will be out of sync with the server
+  const favorite = fetcher.formData
+    ? fetcher.formData.get('favorite') === 'true'
+    : contact.favorite
 
   return (
-    <fetcher.Form method="post"> {/* form that can cause mutation without page navigation */}
+    <fetcher.Form method="post">
+      {/* form that can cause mutation without page navigation */}
       <button
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
         name="favorite"
