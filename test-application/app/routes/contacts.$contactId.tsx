@@ -1,13 +1,15 @@
 import {
+  ClientActionFunctionArgs,
   ClientLoaderFunctionArgs,
   Form,
   Link,
+  useFetcher,
   useLoaderData,
 } from '@remix-run/react'
 import type { FunctionComponent } from 'react'
 
 import invariant from 'tiny-invariant'
-import { getContact, type ContactRecord } from '../data'
+import { getContact, updateContact, type ContactRecord } from '../data'
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
   invariant(params.contactId, 'Missing contactId param')
@@ -18,6 +20,17 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
   }
   return { contact }
 }
+
+export const clientAction = async ({
+  params,
+  request,
+}: ClientActionFunctionArgs) => {
+  invariant(params.contactId, "Missing contactId param");
+  const formData = await request.formData();
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") === "true",
+  });
+};
 
 export default function Contact() {
   const { contact } = useLoaderData<typeof clientLoader>()
@@ -85,9 +98,10 @@ const Favorite: FunctionComponent<{
   contact: Pick<ContactRecord, 'favorite'>
 }> = ({ contact }) => {
   const favorite = contact.favorite
+  const fetcher = useFetcher()
 
   return (
-    <Form method="post">
+    <fetcher.Form method="post"> {/* form that can cause mutation without page navigation */}
       <button
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
         name="favorite"
@@ -95,6 +109,6 @@ const Favorite: FunctionComponent<{
       >
         {favorite ? '★' : '☆'}
       </button>
-    </Form>
+    </fetcher.Form>
   )
 }
