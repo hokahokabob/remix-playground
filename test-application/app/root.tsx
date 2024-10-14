@@ -41,6 +41,9 @@ export const App = () => {
   const { contacts, query } = useLoaderData<typeof clientLoader>()
   const navigation = useNavigation()
   const submit = useSubmit()
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has('q')
   const [queryState, setQueryState] = useState<string>(query || '')
 
   useEffect(() => {
@@ -52,22 +55,24 @@ export const App = () => {
       <div id="sidebar">
         <h1>Remix Contacts</h1>
         <div>
-          <Form id="search-form" role="search"
-            onChange={
-              (event) => {
-                submit(event.currentTarget)
-              }
-            }>
+          <Form
+            id="search-form"
+            role="search"
+            onChange={(event) => {
+              submit(event.currentTarget)
+            }}
+          >
             <input
               id="q"
-              aria-label="Search conPtacts"
+              aria-label="Search contacts"
+              className={searching ? 'loading' : ''}
               placeholder="Search"
               type="search"
               name="q"
               onChange={(event) => setQueryState(event.currentTarget.value)}
               value={queryState}
             />
-            <div id="search-spinner" aria-hidden hidden={true} />
+            <div id="search-spinner" aria-hidden hidden={!searching} />
           </Form>
           <Form method="post">
             <button type="submit">New</button>
