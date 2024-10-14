@@ -11,6 +11,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useNavigation,
+  useSubmit,
 } from '@remix-run/react'
 
 import { LinksFunction } from '@remix-run/node'
@@ -39,6 +40,7 @@ export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
 export const App = () => {
   const { contacts, query } = useLoaderData<typeof clientLoader>()
   const navigation = useNavigation()
+  const submit = useSubmit()
   const [queryState, setQueryState] = useState<string>(query || '')
 
   useEffect(() => {
@@ -50,7 +52,12 @@ export const App = () => {
       <div id="sidebar">
         <h1>Remix Contacts</h1>
         <div>
-          <Form id="search-form" role="search">
+          <Form id="search-form" role="search"
+            onChange={
+              (event) => {
+                submit(event.currentTarget)
+              }
+            }>
             <input
               id="q"
               aria-label="Search conPtacts"
